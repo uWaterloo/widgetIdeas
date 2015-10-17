@@ -1,20 +1,49 @@
-// DATABASE
-// keys: CREATE TABLE keys(id NVARCHAR(50) PRIMARY KEY, value NVARCHAR(255))
+// DATABASE PERSISTENCE EXAMPLE
 
-const API_BASE = 'https://uwportal.uservoice.com/api/v1';
-
-function getKeys() {
-    var keys = {};
-    var rkeys = JSON.parse(db.Execute('SELECT * FROM keys'));
-    
-    for (var i in rkeys) {
-        keys[rkeys[i]['id']] = rkeys[i]['value'];
+// Retreive data from the database
+function getIdeas() {
+    var queryResult = db.Execute('SELECT * FROM sampleTable');
+    var rows = JSON.parse(queryResult);
+    if (rows.length > 0 && typeof rows[0].Error != 'undefined') {
+        return '{"status":"noTable"}';
     }
-    
-    return keys;
+    return queryResult;
 }
 
-function getSuggestions() {
-    var keys = getKeys();
-    return proxy.GetProxy(API_BASE + '/suggestions.json?client=' + keys['secret']);
+// Create talbe
+function createTable() {
+    var result = {};
+
+    var queryResult = db.Execute('SELECT TOP 1 * FROM sampleTable');
+    var row = JSON.parse(queryResult);
+
+    // CREATE TABLE keys(id NVARCHAR(50) PRIMARY KEY, value NVARCHAR(255))
+    
+    if (row.length > 0 && typeof row[0].Error != 'undefined') {
+        db.Execute('CREATE TABLE sampleTable(id INTEGER PRIMARY KEY IDENTITY(1,1), userId nvarchar(50), value nvarchar(50));');
+        result = '{"status":"tableCreated"}';
+    } else
+        result = '{"status":"tableExist"}';
+
+    return JSON.stringify(result);
+}
+
+// Insert into the database
+function insert() {
+    if (args.Get("value").length > 50)
+        return '{"result":"error"}';
+    else {
+        db.Execute('INSERT INTO sampleTable VALUES(@currentUser,@value)');
+        return getData();
+    }
+}
+
+// OPEN DATA API EXAMPLE
+
+function getOpenData() {
+    var apiKey = ""; // Paste your API key here. IMPORTANT: DO NOT PUSH THIS TO GITHUB, STORE KEY IN DB
+    if (apiKey == "")
+        return '{"error":"No Api Key! Add your key in the server script file."}';
+
+    return proxy.GetProxy('https://api.uwaterloo.ca/v2/foodservices/watcard.json?key=' + apiKey);
 }
