@@ -62,10 +62,11 @@ widgetIdeasFactory) {
 
     // Handle click on an item in the list and search example
     $scope.showIdea = function (idea) {
-        
+        $scope.newComment = {value: null};
         // Set which item to show in the details view
         $scope.currentIdea = idea;
         $scope.portalHelpers.invokeServerFunction('getComments', { path: idea.path }).then(function(result) {
+            $scope.$broadcast('ignoreListChanges');
            	idea.comments = result.comments; 
             console.log(result);
         });
@@ -78,12 +79,12 @@ widgetIdeasFactory) {
         // get previous items in the list
         var prevItem = $scope.portalHelpers.getPrevListItem();
         // refresh details view with the new item
-        $scope.showIdea(prevItem);
+        if (prevItem != null) $scope.showIdea(prevItem);
     }
 
     $scope.nextItem = function () {
         var nextItem = $scope.portalHelpers.getNextListItem();
-        $scope.showIdea(nextItem);
+        if (nextItem != null) $scope.showIdea(nextItem);
     }
 
 }])

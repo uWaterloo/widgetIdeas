@@ -19,7 +19,7 @@
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" role="tablist">
         <li role="presentation" ng-click='activeTab = "pending"' ng-class="{'active': activeTab == 'pending'}"><a>Pending</a></li>
-        <li role="presentation" ng-click='activeTab = "complete"' ng-class="{'active': activeTab == 'complete'}"><a href="#complete">Completed</a></li>
+        <li role="presentation" ng-click='activeTab = "complete"' ng-class="{'active': activeTab == 'complete'}"><a>Completed</a></li>
     </ul>
 
   <!-- Tab panes -->
@@ -115,7 +115,7 @@
             </div>
             
             <div class="form-group">
-                <textarea class="form-control" placeholder="Enter a comment..." rows="3" ng-model="currentIdea.newComment"></textarea>
+                <textarea class="form-control" placeholder="Enter a comment..." rows="3" ng-model="newComment.value"></textarea>
             </div>
             <div class="form-group">
                 <button type="button" class="btn btn-default" ng-click="addComment()">Comment</button>
