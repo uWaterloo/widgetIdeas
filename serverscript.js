@@ -1,7 +1,7 @@
 // DATABASE PERSISTENCE EXAMPLE
 
 // Retreive data from the database
-function getData() {
+function getIdeas() {
     var queryResult = db.Execute('SELECT * FROM sampleTable');
     var rows = JSON.parse(queryResult);
     if (rows.length > 0 && typeof rows[0].Error != 'undefined') {
