@@ -75,26 +75,24 @@
         <widget-cell>
             <div ng-bind-html="currentIdea.formatted_text"></div>
            	<hr/>
-            
-            <span class="idea-action" ng-if="currentIdea.status != null">
-                <span class="label"
+            <!--state: {{currentIdea.state}}-->
+            <!--date : {{currentIdea.updated_at}}-->
+            <div class="idea-action">
+                <a href="{{currentIdea.url}}" target="_blank">
+                    <span class="glyphicon glyphicon-new-window"></span>
+                    View on Uservoice
+                </a>
+                &nbsp;&nbsp;
+                <span class="label" ng-if="currentIdea.status != null" 
                   ng-class="{'label-warning' : currentIdea.status.key == 'under-review',
                              'label-success' : currentIdea.status.key == 'completed'}">
                     {{currentIdea.status.name}}
                 </span>
-            </span>
-            <!--state: {{currentIdea.state}}-->
-            <!--date : {{currentIdea.updated_at}}-->
-            <span class="idea-action">
-                <a href="{{currentIdea.url}}">
-                    <span class="glyphicon glyphicon-new-window"></span>
-                    View on Uservoice
-                </a>
-            </span>
-            <span class="idea-action">
+            </div>
+            <div class="idea-action">
                 <span class="glyphicon glyphicon-time"></span>
-                {{currentIdea.updated_at}}
-            </span>
+                {{currentIdea.updated_at | momentDate : 'MMMM DD YYYY, h:mm'}}
+            </div>
  			<hr/>
             
             <ul>
