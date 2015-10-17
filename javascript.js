@@ -10,37 +10,36 @@ widgetIdeasFactory) {
     };
 
     // Import variables and functions from service
-    $scope.insertValue = widgetIdeasFactory.insertValue;
     $scope.loading = widgetIdeasFactory.loading;
     $scope.links = widgetIdeasFactory.links;
-    $scope.openDataExampleData = widgetIdeasFactory.openDataExampleData;
-    $scope.dbData = widgetIdeasFactory.dbData;
-    $scope.item = widgetIdeasFactory.item;
+    $scope.newIdea = widgetIdeasFactory.newIdea;
+    $scope.currentIdea = widgetIdeasFactory.currentIdea;
+    $scope.ideas = widgetIdeasFactory.ideas;
 
     // Model for the search and list example
-    $scope.model = [{
+    $scope.ideas = [{
         title: "item 1",
-        details: "item 1 details",
+        description: "item 1 details",
         category: '1'
     }, {
         title: "item 2",
-        details: "item 2 details",
+        description: "item 2 details",
         category: '2'
     }, {
         title: "item 3",
-        details: "item 3 details",
+        description: "item 3 details",
         category: '1'
     }, {
         title: "item 4",
-        details: "item 4 details",
+        description: "item 4 details",
         category: '2'
     }, {
         title: "item 5",
-        details: "item 5 details",
+        description: "item 5 details",
         category: '1'
     }, {
         title: "item 6",
-        details: "item 6 details",
+        description: "item 6 details",
         category: '2'
     }];
 
@@ -70,7 +69,7 @@ widgetIdeasFactory) {
     }
 
     // Handle form submit in the database test example
-    $scope.insertData = function () {
+    $scope.insertIdea = function () {
         if ($scope.insertValue.value.length > 50)
             alert('value should be less than 50 characters');
         else {
@@ -84,11 +83,11 @@ widgetIdeasFactory) {
     };
 
     // Handle click on an item in the list and search example
-    $scope.showDetails = function (item) {
+    $scope.showIdea = function (idea) {
         // Set which item to show in the details view
-        $scope.item.value = item;
+        $scope.currentIdea = idea;
         // Show details view in the second column
-        $scope.portalHelpers.showView('details.html', 2);
+        $scope.portalHelpers.showView('idea.html', 2);
     };
 
     // Handle "previous item" click from the details page
@@ -96,12 +95,12 @@ widgetIdeasFactory) {
         // get previous items in the list
         var prevItem = $scope.portalHelpers.getPrevListItem();
         // refresh details view with the new item
-        $scope.showDetails(prevItem);
+        $scope.showIdea(prevItem);
     }
 
     $scope.nextItem = function () {
         var nextItem = $scope.portalHelpers.getNextListItem();
-        $scope.showDetails(nextItem);
+        $scope.showIdea(nextItem);
     }
 
 }])
@@ -116,22 +115,19 @@ widgetIdeasFactory) {
         var loading = {
             value: true
         };
-        var insertValue = {
+        var newIdea = {
+            title: null,
+            description: null,
+            category: null
+        };
+        var ideas = {
             value: null
         };
-        var links = {
-            value: null
+        var currentIdea = {
+            title: null,
+            description: null,
+            category: null
         };
-        var openDataExampleData = {
-            value: null
-        };
-        var dbData = {
-            value: null
-        };
-        var item = {
-            value: null
-        };
-        var sourcesLoaded = 0;
 
         var init = function ($scope) {
             if (initialized.value)
@@ -139,41 +135,19 @@ widgetIdeasFactory) {
             initialized.value = true;
 
             // Place your init code here:
-
-            // Get data for the widget
-            $http.get('/ImportantLinks/JSONSource').success(function (data) {
-                links.value = data;
-                sourceLoaded();
-            });
-
-            // OPEN DATA API EXAMPLE
-            $scope.portalHelpers.invokeServerFunction('getOpenData').then(function (
-                result) {
-                console.log('getopendata data: ', result);
-                openDataExampleData.value = result.data;
-                sourceLoaded();
-            });
-
-            $scope.portalHelpers.invokeServerFunction('getData').then(function (result) {
-                dbData.value = result;
-                sourceLoaded();
-            });
-        }
-
-        function sourceLoaded() {
-            sourcesLoaded++;
-            if (sourcesLoaded == 3)
-                loading.value = false;
+			loading.value = false;
+            //$scope.portalHelpers.invokeServerFunction('getIdeas').then(function (result) {
+            //    ideas.value = result;
+            //    loading.value = false;
+            //});
         }
 
         return {
             init: init,
             loading: loading,
-            insertValue: insertValue,
-            links: links,
-            openDataExampleData: openDataExampleData,
-            dbData: dbData,
-            item: item
+            newIdea: newIdea,
+            currentIdea: currentIdea,
+            ideas: ideas
         };
 
     }])
