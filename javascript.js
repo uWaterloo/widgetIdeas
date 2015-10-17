@@ -15,7 +15,7 @@ widgetIdeasFactory) {
     $scope.newIdea = widgetIdeasFactory.newIdea;
     $scope.currentIdea = widgetIdeasFactory.currentIdea;
     $scope.ideas = widgetIdeasFactory.ideas;
-	$scope.activeTab = 'request';
+	$scope.activeTab = 'pending';
     
     // initialize the service
     widgetIdeasFactory.init($scope);
@@ -122,12 +122,7 @@ widgetIdeasFactory) {
                 $scope.ideas = result.suggestions;
                 loading.value = false;
             });
-            
-            $('a').on('click', function (e) {
-              e.preventDefault();
-              $(this).tab('show');
-            });
-            
+           
             // Place your init code here:
 			
             //$scope.portalHelpers.invokeServerFunction('getIdeas').then(function (result) {

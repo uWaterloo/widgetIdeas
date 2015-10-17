@@ -12,21 +12,22 @@
 
     <!-- SEARCH AND LIST EXAMPLE -->
 
-    <button type="button" class="btn btn-primary" ng-click="showCreateView()">New Widget Idea</button>
+    <button type="button" class="btn btn-primary" ng-click="showCreateView()" id="newWidgetBtn">
+        <span class="gylphicon glyphicon-plus"></span> New Widget Idea
+    </button>
     
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation" ng-click='activeTab = "request"' ng-class="{'active': activeTab == 'request'}"><a href="#request">Requests</a></li>
+        <li role="presentation" ng-click='activeTab = "pending"' ng-class="{'active': activeTab == 'pending'}"><a>Pending</a></li>
         <li role="presentation" ng-click='activeTab = "complete"' ng-class="{'active': activeTab == 'complete'}"><a href="#complete">Completed</a></li>
-        <li role="presentation" ng-click='activeTab = "new"' ng-class="{'active': activeTab == 'new'}"><a href="#new">New Idea</a></li>
     </ul>
 
   <!-- Tab panes -->
     <div class="tab-content">
-        <div role="tabpanel" class="tab-pane" ng-show="activeTab == 'request'" ng-class="{'active': activeTab == 'request'}" >
+        <div role="tabpanel" class="tab-pane" ng-class="{'active': activeTab == 'pending'}" >
             <widget-list list="idea in ideas | orderBy: 'vote_count' : true | completeFilter: false" show-items="8">
                 <widget-row clickable ng-click="showIdea(idea)">
-                    <widget-cell>{{idea.vote_count}}</widget-cell>
+                    <widget-cell><div class="vote-box">{{idea.vote_count}}</div></widget-cell>
                     <widget-cell fill>{{idea.title}}</widget-cell>
                     <widget-cell>
                         <widget-icon name="angle-right"></widget-icon>
@@ -34,19 +35,16 @@
                 </widget-row>
             </widget-list>
         </div>
-        <div role="tabpanel" class="tab-pane" ng-show="activeTab == 'complete'" ng-class="{'active': activeTab == 'complete'}">
+        <div role="tabpanel" class="tab-pane" ng-class="{'active': activeTab == 'complete'}">
         	<widget-list list="idea in ideas | orderBy: 'vote_count' : true | completeFilter: true" show-items="8">
                 <widget-row clickable ng-click="showIdea(idea)">
-                    <widget-cell>{{idea.vote_count}}</widget-cell>
+                    <widget-cell><div class="vote-box">{{idea.vote_count}}</div></widget-cell>
                     <widget-cell fill>{{idea.title}}</widget-cell>
                     <widget-cell>
                         <widget-icon name="angle-right"></widget-icon>
                     </widget-cell>
                 </widget-row>
             </widget-list>
-        </div>
-        <div role="tabpanel" class="tab-pane " ng-show="activeTab == 'new'" ng-class="{'active': activeTab == 'new'}">
-        
         </div>
     </div>
 
@@ -75,25 +73,60 @@
     </widget-row>
     <widget-row>
         <widget-cell>
-            <div class="pHighlight" ng-bind-html="currentIdea.formatted_text"></div>
-            <span ng-style="{'background-color': currentIdea.status.hex_color}">{{currentIdea.status.name}}</span>
-            state: {{currentIdea.state}} <br/>
-            status: {{currentIdea.status}} <br/>
-            date : {{currentIdea.updated_at}} <br/>
-            link : {{currentIdea.url}}
-        </widget-cell>
-    </widget-row>
-    <widget-row>
-        <widget-cell>
-        <ul>
-            <li ng-repeat="comment in currentIdea.comments">
-                <div ng-bind-html="comment.formatted_text"></div>
-            </li>
-        </ul>
+            <div ng-bind-html="currentIdea.formatted_text"></div>
+           	<hr/>
+            
+            <span class="idea-action" ng-if="currentIdea.status != null">
+                <span class="label"
+                  ng-class="{'label-warning' : currentIdea.status.key == 'under-review',
+                             'label-success' : currentIdea.status.key == 'completed'}">
+                    {{currentIdea.status.name}}
+                </span>
+            </span>
+            <!--state: {{currentIdea.state}}-->
+            <!--date : {{currentIdea.updated_at}}-->
+            <span class="idea-action">
+                <a href="{{currentIdea.url}}">
+                    <span class="glyphicon glyphicon-new-window"></span>
+                    View on Uservoice
+                </a>
+            </span>
+            <span class="idea-action">
+                <span class="glyphicon glyphicon-time"></span>
+                {{currentIdea.updated_at}}
+            </span>
+ 			<hr/>
+            
+            <ul>
+                <li ng-repeat="comment in currentIdea.comments">
+                    <div ng-bind-html="comment.formatted_text"></div>
+                </li>
+            </ul>
+            <div class="form-group">
+                <textarea class="form-control" placeholder="Enter a comment..." rows="3" ng-model="currentComment"></textarea>
+            </div>
+            <div class="form-group">
+                <button type="button" class="btn btn-default" ng-click="addComment()">Comment</button>
+            </div>
         </widget-cell>
     </widget-row>
 </script>
 
 <script type="text/ng-template" id="createView.html">
+    
+    <div class="form-group" style="margin-top:20px;">
+        <h4>New Widget Idea</h4>
+    </div>
+    
+    <div class="form-group">
+    	<input type="text" class="form-control" placeholder="Enter an idea..." ng-model="newIdea.title"/>
+    </div>
+    <div class="form-group">
+    	<textarea class="form-control" placeholder="Enter a description (optional)" ng-model="newIdea.description"></textarea>
+    </div>
+
+    <div class="form-group">
+        <button type="button" ng-click="submitIdea()" class="btn btn-default">Submit</button>
+    </div>
     
 </script>
