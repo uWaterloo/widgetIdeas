@@ -15,7 +15,8 @@ widgetIdeasFactory) {
     $scope.newIdea = widgetIdeasFactory.newIdea;
     $scope.currentIdea = widgetIdeasFactory.currentIdea;
     $scope.ideas = widgetIdeasFactory.ideas;
-
+	$scope.activeTab = 'request';
+    
     // initialize the service
     widgetIdeasFactory.init($scope);
 
@@ -61,10 +62,11 @@ widgetIdeasFactory) {
 
     // Handle click on an item in the list and search example
     $scope.showIdea = function (idea) {
+        
         // Set which item to show in the details view
         $scope.currentIdea = idea;
         $scope.portalHelpers.invokeServerFunction('getComments', { path: idea.path }).then(function(result) {
-           	$scope.currentIdea.comments = result.comments; 
+           	idea.comments = result.comments; 
             console.log(result);
         });
         // Show details view in the second column
@@ -121,6 +123,11 @@ widgetIdeasFactory) {
                 loading.value = false;
             });
             
+            $('a').on('click', function (e) {
+              e.preventDefault();
+              $(this).tab('show');
+            });
+            
             // Place your init code here:
 			
             //$scope.portalHelpers.invokeServerFunction('getIdeas').then(function (result) {
@@ -147,10 +154,15 @@ widgetIdeasFactory) {
         };
     }])
     // Custom filter example
-    .filter('widgetIdeasFilterName', function () {
-        return function (input, arg1, arg2) {
-            // Filter your output here by iterating over input elements
-            var output = input;
+    .filter('completeFilter', function () {
+        return function (input, complete) {
+            console.log(input);
+            if (typeof complete == "undefined") complete = true;
+            var output = $.grep(input, function(idea) {
+               	var result = idea.status != null && idea.status.key == "completed"; 
+                return complete ? result : !result;
+            });
+           
             return output;
         }
     });
