@@ -17,6 +17,8 @@ function createTable() {
     var queryResult = db.Execute('SELECT TOP 1 * FROM sampleTable');
     var row = JSON.parse(queryResult);
 
+    // CREATE TABLE keys(id NVARCHAR(50) PRIMARY KEY, value NVARCHAR(255))
+    
     if (row.length > 0 && typeof row[0].Error != 'undefined') {
         db.Execute('CREATE TABLE sampleTable(id INTEGER PRIMARY KEY IDENTITY(1,1), userId nvarchar(50), value nvarchar(50));');
         result = '{"status":"tableCreated"}';
