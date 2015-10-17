@@ -15,7 +15,8 @@ widgetIdeasFactory) {
     $scope.newIdea = widgetIdeasFactory.newIdea;
     $scope.currentIdea = widgetIdeasFactory.currentIdea;
     $scope.ideas = widgetIdeasFactory.ideas;
-
+	$scope.activeTab = 'pending';
+    
     // initialize the service
     widgetIdeasFactory.init($scope);
 
@@ -61,10 +62,12 @@ widgetIdeasFactory) {
 
     // Handle click on an item in the list and search example
     $scope.showIdea = function (idea) {
+        $scope.newComment = {value: null};
         // Set which item to show in the details view
         $scope.currentIdea = idea;
         $scope.portalHelpers.invokeServerFunction('getComments', { path: idea.path }).then(function(result) {
-           	$scope.currentIdea.comments = result.comments; 
+            $scope.$broadcast('ignoreListChanges');
+           	idea.comments = result.comments; 
             console.log(result);
         });
         // Show details view in the second column
@@ -76,12 +79,12 @@ widgetIdeasFactory) {
         // get previous items in the list
         var prevItem = $scope.portalHelpers.getPrevListItem();
         // refresh details view with the new item
-        $scope.showIdea(prevItem);
+        if (prevItem != null) $scope.showIdea(prevItem);
     }
 
     $scope.nextItem = function () {
         var nextItem = $scope.portalHelpers.getNextListItem();
-        $scope.showIdea(nextItem);
+        if (nextItem != null) $scope.showIdea(nextItem);
     }
 
 }])
@@ -120,7 +123,7 @@ widgetIdeasFactory) {
                 $scope.ideas = result.suggestions;
                 loading.value = false;
             });
-            
+           
             // Place your init code here:
 			
             //$scope.portalHelpers.invokeServerFunction('getIdeas').then(function (result) {
@@ -147,10 +150,15 @@ widgetIdeasFactory) {
         };
     }])
     // Custom filter example
-    .filter('widgetIdeasFilterName', function () {
-        return function (input, arg1, arg2) {
-            // Filter your output here by iterating over input elements
-            var output = input;
+    .filter('completeFilter', function () {
+        return function (input, complete) {
+            console.log(input);
+            if (typeof complete == "undefined") complete = true;
+            var output = $.grep(input, function(idea) {
+               	var result = idea.status != null && idea.status.key == "completed"; 
+                return complete ? result : !result;
+            });
+           
             return output;
         }
     });
