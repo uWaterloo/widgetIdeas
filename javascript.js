@@ -63,6 +63,10 @@ widgetIdeasFactory) {
     $scope.showIdea = function (idea) {
         // Set which item to show in the details view
         $scope.currentIdea = idea;
+        $scope.portalHelpers.invokeServerFunction('getComments', { path: idea.path }).then(function(result) {
+           	$scope.currentIdea.comments = result.comments; 
+            console.log(result);
+        });
         // Show details view in the second column
         $scope.portalHelpers.showView('ideaView.html', 2);
     };
