@@ -43,12 +43,17 @@
 	
     <widget-row>
         <widget-cell>
-            <h2>{{idea.title}}</h2>
+            <h2>{{currentIdea.title}}</h2>
         </widget-cell>
     </widget-row>
     <widget-row>
         <widget-cell>
-            <div class="pHighlight">{{idea.description}}</div>
+            <div class="pHighlight" ng-bind-html="currentIdea.formatted_text"></div>
+            <ul>
+                <li ng-repeat="comment in currentIdea.comments">
+                    <div ng-bind-html="comment.formatted_text"></div>
+                </li>
+            </ul>
         </widget-cell>
     </widget-row>
 </script>
