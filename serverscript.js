@@ -37,9 +37,9 @@ function getSuggestions() {
  * Loads the comments for the given suggestion.
  * 	suggestion: Suggestion object to load comments for.
  */
-function getComments(suggestion) {
+function getComments() {
     var keys = getKeys();
-    
+    var path = args.Get('path');
     // TODO: Again, handle the pagination
-    return proxy.GetProxy(API_BASE + suggestion.path + '/comments.json?per_page=500&client=' + keys['secret']);
+    return proxy.GetProxy(API_BASE + path + '/comments.json?per_page=500&client=' + keys['secret']);
 }// End of getComments method
