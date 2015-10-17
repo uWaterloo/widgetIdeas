@@ -16,33 +16,6 @@ widgetIdeasFactory) {
     $scope.currentIdea = widgetIdeasFactory.currentIdea;
     $scope.ideas = widgetIdeasFactory.ideas;
 
-    // Model for the search and list example
-    $scope.ideas = [{
-        title: "item 1",
-        description: "item 1 details",
-        category: '1'
-    }, {
-        title: "item 2",
-        description: "item 2 details",
-        category: '2'
-    }, {
-        title: "item 3",
-        description: "item 3 details",
-        category: '1'
-    }, {
-        title: "item 4",
-        description: "item 4 details",
-        category: '2'
-    }, {
-        title: "item 5",
-        description: "item 5 details",
-        category: '1'
-    }, {
-        title: "item 6",
-        description: "item 6 details",
-        category: '2'
-    }];
-
     // initialize the service
     widgetIdeasFactory.init($scope);
 
@@ -60,6 +33,10 @@ widgetIdeasFactory) {
         }
     });
 
+    $scope.showCreateView = function() {
+        $scope.portalHelpers.showView('createView.html', 2);
+    };
+    
     // Create table, invoked by a button press from database test example
     $scope.createTable = function () {
         $scope.portalHelpers.invokeServerFunction('createTable').then(function (
@@ -86,8 +63,12 @@ widgetIdeasFactory) {
     $scope.showIdea = function (idea) {
         // Set which item to show in the details view
         $scope.currentIdea = idea;
+        $scope.portalHelpers.invokeServerFunction('getComments', { path: idea.path }).then(function(result) {
+           	$scope.currentIdea.comments = result.comments; 
+            console.log(result);
+        });
         // Show details view in the second column
-        $scope.portalHelpers.showView('idea.html', 2);
+        $scope.portalHelpers.showView('ideaView.html', 2);
     };
 
     // Handle "previous item" click from the details page
@@ -134,8 +115,14 @@ widgetIdeasFactory) {
                 return;
             initialized.value = true;
 
+            $scope.portalHelpers.invokeServerFunction('getSuggestions').then(function(result) {
+                console.log(result);
+                $scope.ideas = result.suggestions;
+                loading.value = false;
+            });
+            
             // Place your init code here:
-			loading.value = false;
+			
             //$scope.portalHelpers.invokeServerFunction('getIdeas').then(function (result) {
             //    ideas.value = result;
             //    loading.value = false;
