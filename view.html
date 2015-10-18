@@ -19,7 +19,7 @@
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" role="tablist">
         <li role="presentation" ng-click='activeTab = "pending"' ng-class="{'active': activeTab == 'pending'}"><a>Pending</a></li>
-        <li role="presentation" ng-click='activeTab = "complete"' ng-class="{'active': activeTab == 'complete'}"><a href="#complete">Completed</a></li>
+        <li role="presentation" ng-click='activeTab = "complete"' ng-class="{'active': activeTab == 'complete'}"><a>Completed</a></li>
     </ul>
 
   <!-- Tab panes -->
@@ -68,42 +68,54 @@
 	
     <widget-row>
         <widget-cell>
-            <h2>{{currentIdea.title}}</h2>
+            <div class="vote-container">
+                {{currentIdea.vote_count}}
+            </div>
+        </widget-cell>
+        <widget-cell fill>
+            <div>
+                <h2>{{currentIdea.title}}</h2>
+            </div>
+        </widget-cell>
+    </widget-row>
+    <widget-row>
+        <widget-cell>
+            <button type="button" class="btn btn-default" ng-click="vote(currentPost, 1)">Vote 1</button>
+            <button type="button" class="btn btn-default" ng-click="vote(currentPost, 2)">Vote 2</button>
+            <button type="button" class="btn btn-default" ng-click="vote(currentPost, 3)">Vote 3</button>
         </widget-cell>
     </widget-row>
     <widget-row>
         <widget-cell>
             <div ng-bind-html="currentIdea.formatted_text"></div>
-           	<hr/>
             
-            <span class="idea-action" ng-if="currentIdea.status != null">
-                <span class="label"
+           	<hr/>
+            <!--state: {{currentIdea.state}}-->
+            <!--date : {{currentIdea.updated_at}}-->
+            <div class="idea-action">
+                <a href="{{currentIdea.url}}" target="_blank">
+                    <span class="glyphicon glyphicon-new-window"></span>
+                    View on Uservoice
+                </a>
+                &nbsp;&nbsp;
+                <span class="label" ng-if="currentIdea.status != null" 
                   ng-class="{'label-warning' : currentIdea.status.key == 'under-review',
                              'label-success' : currentIdea.status.key == 'completed'}">
                     {{currentIdea.status.name}}
                 </span>
-            </span>
-            <!--state: {{currentIdea.state}}-->
-            <!--date : {{currentIdea.updated_at}}-->
-            <span class="idea-action">
-                <a href="{{currentIdea.url}}">
-                    <span class="glyphicon glyphicon-new-window"></span>
-                    View on Uservoice
-                </a>
-            </span>
-            <span class="idea-action">
+            </div>
+            <div class="idea-action">
                 <span class="glyphicon glyphicon-time"></span>
-                {{currentIdea.updated_at}}
-            </span>
+                {{currentIdea.updated_at | momentDate : 'MMMM DD YYYY, h:mm'}}
+            </div>
  			<hr/>
             
-            <ul>
-                <li ng-repeat="comment in currentIdea.comments">
-                    <div ng-bind-html="comment.formatted_text"></div>
-                </li>
-            </ul>
+           	<div class="comment" ng-repeat="comment in currentIdea.comments">
+            	<div ng-bind-html="comment.formatted_text"></div>
+            </div>
+            
             <div class="form-group">
-                <textarea class="form-control" placeholder="Enter a comment..." rows="3" ng-model="currentComment"></textarea>
+                <textarea class="form-control" placeholder="Enter a comment..." rows="3" ng-model="newComment.value"></textarea>
             </div>
             <div class="form-group">
                 <button type="button" class="btn btn-default" ng-click="addComment()">Comment</button>

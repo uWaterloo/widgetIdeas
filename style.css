@@ -9,3 +9,20 @@
     border: 1px solid black;
     text-align: center;
 }
+
+.idea-action {
+ 	margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+.comment {
+ 	margin-top:15px;
+    margin-bottom:15px;
+}
+
+.vote-container {
+ 	width: 50px;
+    padding:10px;
+    border: 1px solid black;
+    text-align: center;
+}
